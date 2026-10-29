@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aBMI Health Suite - Side Panel</title>
+  <link rel="stylesheet" href="../popup/popup.css">
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body class="sidepanel-mode">
+  <div class="extension-wrap">
+    <!-- Header -->
+    <header class="ext-header">
+      <div class="ext-brand">
+        <svg class="brand-icon" viewBox="0 0 32 32" width="22" height="22" fill="none">
+          <path d="M16 3C16 3 13.2 8.5 13.2 12C13.2 13.55 14.45 14.8 16 14.8C17.55 14.8 18.8 13.55 18.8 12C18.8 8.5 16 3 16 3Z" fill="#38bdf8"/>
+          <path d="M16 29C16 29 18.8 23.5 18.8 20C18.8 18.45 17.55 17.2 16 17.2C14.45 17.2 13.2 18.45 13.2 20C13.2 23.5 16 29 16 29Z" fill="#38bdf8"/>
+          <path d="M3 16C3 16 8.5 18.8 12 18.8C13.55 18.8 14.8 17.55 14.8 16C14.8 14.45 13.55 13.2 12 13.2C8.5 13.2 3 16 3 16Z" fill="#38bdf8"/>
+          <path d="M29 16C29 16 23.5 13.2 20 13.2C18.45 13.2 17.2 14.45 17.2 16C17.2 17.55 18.45 18.8 20 18.8C23.5 18.8 29 16 29 16Z" fill="#38bdf8"/>
+        </svg>
+        <div class="brand-title">
+          <span>aBMICalculator</span>
+          <span class="badge-tag">Side Panel</span>
+        </div>
+      </div>
+
+      <div class="ext-controls">
+        <button type="button" class="ctrl-btn" id="btnUnitToggle" title="Toggle Units (Metric/US)">
+          <span id="unitIndicator">Metric</span>
+        </button>
+        <button type="button" class="ctrl-btn" id="btnThemeToggle" title="Toggle Theme">
+          <svg id="themeIconSun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg id="themeIconMoon" class="hidden" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Calculator Navigation Tabs -->
+    <nav class="tool-tabs" id="toolTabs">
+      <button type="button" class="tab-btn active" data-tool="bmi">BMI</button>
+      <button type="button" class="tab-btn" data-tool="calorie">Calorie</button>
+      <button type="button" class="tab-btn" data-tool="whr">WHR</button>
+      <button type="button" class="tab-btn" data-tool="bodyfat">Body Fat</button>
+      <button type="button" class="tab-btn" data-tool="bmr">BMR</button>
+      <button type="button" class="tab-btn" data-tool="ibw">Ideal Wt</button>
+      <button type="button" class="tab-btn" data-tool="ovulation">Ovulation</button>
+      <button type="button" class="tab-btn" data-tool="pregnancy">Pregnancy</button>
+    </nav>
+
+    <!-- Main Container for Calculator Views -->
+    <main class="calc-body">
+
+      <!-- 1. BMI CALCULATOR -->
+      <section class="calc-view active" id="view-bmi">
+        <div class="input-grid">
+          <div class="input-group" id="bmiHeightMetric">
+            <label for="bmi_height">Height (cm)</label>
+            <input type="number" id="bmi_height" value="175" min="50" max="260" step="0.5">
+          </div>
+          <div class="input-group hidden" id="bmiHeightImperial">
+            <label>Height (ft &amp; in)</label>
+            <div class="dual-inputs">
+              <input type="number" id="bmi_height_ft" value="5" min="1" max="8" placeholder="ft">
+              <input type="number" id="bmi_height_in" value="9" min="0" max="11" placeholder="in">
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="bmi_weight" id="lblBmiWeight">Weight (kg)</label>
+            <input type="number" id="bmi_weight" value="70" min="20" max="400" step="0.1">
+          </div>
+        </div>
+
+        <div class="result-card" id="resCardBmi">
+          <div class="res-primary-row">
+            <div>
+              <span class="res-label">Body Mass Index</span>
+              <div class="res-number" id="bmiValue">22.86</div>
+            </div>
+            <div class="res-badge badge-normal" id="bmiBadge">Normal weight</div>
+          </div>
+          <div class="res-bar-wrap">
+            <div class="res-bar">
+              <div class="res-indicator" id="bmiBarIndicator" style="left: 45%;"></div>
+            </div>
+          </div>
+          <div class="res-meta-grid">
+            <div><span class="meta-label">Healthy Weight:</span> <strong id="bmiHealthyRange">56.7 – 76.3 kg</strong></div>
+            <div><span class="meta-label">BMI Prime:</span> <strong id="bmiPrime">0.91</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. CALORIE & MACRO CALCULATOR -->
+      <section class="calc-view" id="view-calorie">
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="cal_gender">Gender</label>
+            <select id="cal_gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="cal_age">Age (years)</label>
+            <input type="number" id="cal_age" value="28" min="15" max="110">
+          </div>
+          <div class="input-group" id="calHeightMetric">
+            <label for="cal_height">Height (cm)</label>
+            <input type="number" id="cal_height" value="175" min="50" max="250">
+          </div>
+          <div class="input-group hidden" id="calHeightImperial">
+            <label>Height (ft / in)</label>
+            <div class="dual-inputs">
+              <input type="number" id="cal_height_ft" value="5" min="1" max="8">
+              <input type="number" id="cal_height_in" value="9" min="0" max="11">
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="cal_weight" id="lblCalWeight">Weight (kg)</label>
+            <input type="number" id="cal_weight" value="72" min="30" max="350">
+          </div>
+        </div>
+        <div class="input-group full-width">
+          <label for="cal_activity">Activity Level</label>
+          <select id="cal_activity">
+            <option value="1.2">Sedentary (office job, little exercise)</option>
+            <option value="1.375">Lightly Active (1-3 days/week)</option>
+            <option value="1.55" selected>Moderately Active (3-5 days/week)</option>
+            <option value="1.725">Very Active (6-7 days/week intense)</option>
+            <option value="1.9">Athlete / Heavy Labor</option>
+          </select>
+        </div>
+        <div class="input-group full-width">
+          <label for="cal_goal">Dietary Goal</label>
+          <select id="cal_goal">
+            <option value="maintain" selected>Maintain Weight (TDEE)</option>
+            <option value="mild_loss">Mild Weight Loss (-250 kcal)</option>
+            <option value="fat_loss">Weight Loss (-500 kcal)</option>
+            <option value="mild_gain">Mild Weight Gain (+250 kcal)</option>
+            <option value="bulk">Muscle Bulking (+500 kcal)</option>
+          </select>
+        </div>
+
+        <div class="result-card">
+          <div class="res-primary-row">
+            <div>
+              <span class="res-label">Target Energy Intake</span>
+              <div class="res-number" id="calValue">2,630 <span class="unit-sub">kcal/day</span></div>
+            </div>
+            <div class="res-badge badge-blue" id="calGoalBadge">Maintenance</div>
+          </div>
+          <div class="macro-cards">
+            <div class="macro-pill"><span class="m-title">Protein</span><strong id="macroProtein">140g</strong></div>
+            <div class="macro-pill"><span class="m-title">Carbs</span><strong id="macroCarbs">285g</strong></div>
+            <div class="macro-pill"><span class="m-title">Fats</span><strong id="macroFats">70g</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. WAIST-TO-HIP RATIO (WHR) -->
+      <section class="calc-view" id="view-whr">
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="whr_gender">Gender</label>
+            <select id="whr_gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="whr_waist" id="lblWhrWaist">Waist (cm)</label>
+            <input type="number" id="whr_waist" value="82" min="40" max="200" step="0.5">
+          </div>
+          <div class="input-group full-width">
+            <label for="whr_hip" id="lblWhrHip">Hip (cm)</label>
+            <input type="number" id="whr_hip" value="98" min="50" max="220" step="0.5">
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="res-primary-row">
+            <div>
+              <span class="res-label">Waist-to-Hip Ratio</span>
+              <div class="res-number" id="whrValue">0.84</div>
+            </div>
+            <div class="res-badge badge-normal" id="whrBadge">Low Health Risk</div>
+          </div>
+          <div class="res-meta-grid">
+            <div><span class="meta-label">Body Shape:</span> <strong id="whrShape">Pear (Gynoid)</strong></div>
+            <div><span class="meta-label">WHO Protocol:</span> <strong id="whrRiskDetail">Optimal cardiometabolic tier</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. BODY FAT % (US NAVY) -->
+      <section class="calc-view" id="view-bodyfat">
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="bf_gender">Gender</label>
+            <select id="bf_gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="bf_height" id="lblBfHeight">Height (cm)</label>
+            <input type="number" id="bf_height" value="175" min="80" max="250">
+          </div>
+          <div class="input-group">
+            <label for="bf_weight" id="lblBfWeight">Weight (kg)</label>
+            <input type="number" id="bf_weight" value="72" min="30" max="300">
+          </div>
+          <div class="input-group">
+            <label for="bf_neck" id="lblBfNeck">Neck (cm)</label>
+            <input type="number" id="bf_neck" value="38" min="20" max="70">
+          </div>
+          <div class="input-group">
+            <label for="bf_waist" id="lblBfWaist">Waist (cm)</label>
+            <input type="number" id="bf_waist" value="82" min="40" max="180">
+          </div>
+          <div class="input-group hidden" id="bfHipGroup">
+            <label for="bf_hip" id="lblBfHip">Hip (cm)</label>
+            <input type="number" id="bf_hip" value="98" min="50" max="200">
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="res-primary-row">
+            <div>
+              <span class="res-label">Body Fat Percentage</span>
+              <div class="res-number" id="bfValue">16.8 <span class="unit-sub">%</span></div>
+            </div>
+            <div class="res-badge badge-normal" id="bfBadge">Fitness</div>
+          </div>
+          <div class="res-meta-grid">
+            <div><span class="meta-label">Fat Mass:</span> <strong id="bfFatMass">12.1 kg</strong></div>
+            <div><span class="meta-label">Lean Mass:</span> <strong id="bfLeanMass">59.9 kg</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. BMR & TDEE -->
+      <section class="calc-view" id="view-bmr">
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="bmr_gender">Gender</label>
+            <select id="bmr_gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="bmr_age">Age (years)</label>
+            <input type="number" id="bmr_age" value="30" min="15" max="110">
+          </div>
+          <div class="input-group">
+            <label for="bmr_height" id="lblBmrHeight">Height (cm)</label>
+            <input type="number" id="bmr_height" value="175" min="60" max="250">
+          </div>
+          <div class="input-group">
+            <label for="bmr_weight" id="lblBmrWeight">Weight (kg)</label>
+            <input type="number" id="bmr_weight" value="70" min="30" max="300">
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="res-primary-row">
+            <div>
+              <span class="res-label">Basal Metabolic Rate (BMR)</span>
+              <div class="res-number" id="bmrValue">1,658 <span class="unit-sub">kcal</span></div>
+            </div>
+            <div class="res-badge badge-blue">Mifflin-St Jeor</div>
+          </div>
+          <div class="res-meta-grid">
+            <div><span class="meta-label">Sedentary TDEE:</span> <strong id="bmrSedentary">1,990 kcal</strong></div>
+            <div><span class="meta-label">Moderate TDEE:</span> <strong id="bmrModerate">2,570 kcal</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. IDEAL BODY WEIGHT -->
+      <section class="calc-view" id="view-ibw">
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="ibw_gender">Gender</label>
+            <select id="ibw_gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="ibw_height" id="lblIbwHeight">Height (cm)</label>
+            <input type="number" id="ibw_height" value="175" min="120" max="230">
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="res-primary-row">
+            <div>
+              <span class="res-label">Clinical Average IBW</span>
+              <div class="res-number" id="ibwValue">68.5 <span class="unit-sub" id="ibwUnit">kg</span></div>
+            </div>
+            <div class="res-badge badge-normal">Healthy Target</div>
+          </div>
+          <div class="res-meta-grid">
+            <div><span class="meta-label">Devine Formula:</span> <strong id="ibwDevine">70.5 kg</strong></div>
+            <div><span class="meta-label">Robinson Formula:</span> <strong id="ibwRobinson">67.8 kg</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. OVULATION & FERTILITY -->
+      <section class="calc-view" id="view-ovulation">
+        <div class="input-grid">
+          <div class="input-group full-width">
+            <label for="ov_last_period">First day of last period</label>
+            <input type="date" id="ov_last_period">
+          </div>
+          <div class="input-group full-width">
+            <label for="ov_cycle_len">Average cycle length (days)</label>
+            <input type="number" id="ov_cycle_len" value="28" min="21" max="45">
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="res-primary-row">
+            <div>
+              <span class="res-label">Estimated Ovulation Day</span>
+              <div class="res-number date-font" id="ovDayText">--</div>
+            </div>
+            <div class="res-badge badge-pink">Fertility Peak</div>
+          </div>
+          <div class="res-meta-grid">
+            <div><span class="meta-label">Fertile Window:</span> <strong id="ovWindowText">--</strong></div>
+            <div><span class="meta-label">Next Period:</span> <strong id="ovNextPeriod">--</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. PREGNANCY DUE DATE -->
+      <section class="calc-view" id="view-pregnancy">
+        <div class="input-grid">
+          <div class="input-group full-width">
+            <label for="preg_lmp">First day of last menstrual period (LMP)</label>
+            <input type="date" id="preg_lmp">
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="res-primary-row">
+            <div>
+              <span class="res-label">Estimated Due Date (EDD)</span>
+              <div class="res-number date-font" id="pregDueDate">--</div>
+            </div>
+            <div class="res-badge badge-purple" id="pregTrimesterBadge">1st Trimester</div>
+          </div>
+          <div class="res-meta-grid">
+            <div><span class="meta-label">Gestational Age:</span> <strong id="pregAgeText">-- weeks</strong></div>
+            <div><span class="meta-label">Clinical Rule:</span> <strong>Naegele's Protocol</strong></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Action Bar -->
+    <footer class="ext-footer">
+      <a href="https://www.abmicalculator.com" target="_blank" class="ext-full-link" id="linkFullReport">
+        <span>Open Full Clinical Report on aBMICalculator.com</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </footer>
+  </div>
+
+  <script src="../popup/popup.js"></script>
+</body>
+</html>
